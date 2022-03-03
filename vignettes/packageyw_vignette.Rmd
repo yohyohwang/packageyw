@@ -516,6 +516,8 @@ Warning in sprintf(gettext(fmt, domain = domain), ...) :
 Warning: invalid gid value replaced by that for user 'nobody'
 ```
 
+Some additional commands with [devtools and usethis](https://tinyheero.github.io/jekyll/update/2015/07/26/making-your-first-R-package.html)
+
 ```{r 10b, eval=FALSE}
 devtools::document()
 usethis::use_vignette("packageyw_vignette")
@@ -523,9 +525,27 @@ usethis::use_vignette("packageyw_vignette")
 
 ### 11.
 
-Install package and 
+Install package via devtools and load into library. I could not get the data to load via the package so just loaded it in locally. 
 
 ```{r 11a, eval=FALSE}
-devtools::install("packageyw")
-library("packageyw")
+devtools::install_github("yohyohwang/packageyw")
+load("~/Desktop/GitHub/packageyw/data/combined_df.rda")
+```
+
+I used the `ggplot` function setting #Base as the x axis, Mean as the y axis, and coloring the points by SampleName. Since these are all wildtype samples I did not separate into multiple plots.
+
+```{r 11b, eval=FALSE}
+require(ggplot2)
+ggplot(combined_df, aes(`#Base`, Mean, colour=SampleName)) + geom_point()
+```
+
+![](/Users/yohyoh.wang/Desktop/Rplot.png)
+
+### Final commands to update and publish this version of the package
+
+Using the [devtools documentation](https://www.r-project.org/nosvn/pandoc/devtools.html#:~:text=Updating%20to%20the%20latest%20version,packages(%22devtools%22)%20.) as a guide
+
+```{r final, eval=FALSE}
+devtools::document()
+devtools::build()
 ```
