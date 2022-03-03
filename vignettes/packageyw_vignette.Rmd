@@ -1,0 +1,531 @@
+---
+title: "package"
+author: "Yohyoh Wang"
+date: "3/1/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1. Set up a new package.
+
+I first installed some packages that are useful for package development.
+
+```{r 1a, eval=FALSE}
+install.packages("devtools")
+install.packages("usethat")
+library("devtools")
+library("usethat")
+library(roxygen2)
+```
+
+Then, I created the project using devtools as a new project.
+
+```{r 1b, eval=FALSE}
+setwd("~/Desktop/GitHub")
+devtools::create("packageyw")
+```
+
+```
+✓ Creating 'packageyw/'
+✓ Setting active project to '/Users/yohyoh.wang/Desktop/GitHub/packageyw'
+✓ Creating 'R/'
+✓ Writing 'DESCRIPTION'
+Package: packageyw
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
+Authors@R (parsed):
+    * First Last <first.last@example.com> [aut, cre] (YOUR-ORCID-ID)
+Description: What the package does (one paragraph).
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+✓ Writing 'NAMESPACE'
+✓ Writing 'packageyw.Rproj'
+✓ Adding '^packageyw\\.Rproj$' to '.Rbuildignore'
+✓ Adding '.Rproj.user' to '.gitignore'
+✓ Adding '^\\.Rproj\\.user$' to '.Rbuildignore'
+✓ Setting active project to '<no active project>'
+```
+
+### 2. 
+
+I copied the `reading_in` function to a new file called `reading_in.py` and moved this file into the R subdirectory. 
+
+### 3. 
+
+The DESCRIPTION file automatically adds package dependencies. 
+
+### 4. 
+
+1. (bash, SCU) Unzip zip file from fastqc of first project sample
+2. (bash) scp the fastqc_data.txt file to the package project under the `data` directory
+
+```{bash 4a, eval=FALSE}
+unzip /athena/angsd/scratch/yow4004/project/fastqc/SRR14274243_pass_fastqc.zip 
+scp yow4004@aphrodite.med.cornell.edu:/athena/angsd/scratch/yow4004/project/fastqc/SRR14274243_pass_fastqc/fastqc_data.txt Desktop/GitHub/packageyw/data
+```
+
+3. Call `reading_in.R` using `source`
+4. Use the fastqc_data.txt file as the `reading_in` input
+
+```{r 4b, eval=FALSE}
+source("R/reading_in.R")
+reading_in("data/fastqc_data.txt")
+```
+
+```
+   #Base     Mean Median Lower Quartile Upper Quartile 10th Percentile 90th Percentile
+1      1 32.61014     33             33             34              32              34
+2      2 32.68292     34             33             34              32              34
+3      3 32.74931     34             33             34              32              34
+4      4 32.71110     34             33             34              32              34
+5      5 32.75152     34             33             34              32              34
+6      6 36.48617     38             37             38              34              38
+7      7 36.67936     38             38             38              34              38
+8      8 36.80839     38             38             38              35              38
+9      9 36.88251     38             38             38              35              38
+10    10 36.85532     38             38             38              35              38
+11    11 36.80708     38             38             38              35              38
+12    12 36.83219     38             38             38              35              38
+13    13 36.86057     38             38             38              35              38
+14    14 36.87245     38             38             38              35              38
+15    15 36.83422     38             38             38              35              38
+16    16 36.81788     38             38             38              35              38
+17    17 36.84682     38             38             38              35              38
+18    18 36.85354     38             38             38              35              38
+19    19 36.85764     38             38             38              35              38
+20    20 36.85268     38             38             38              35              38
+21    21 36.84777     38             38             38              35              38
+22    22 36.84937     38             38             38              35              38
+23    23 36.83571     38             38             38              35              38
+24    24 36.84454     38             38             38              35              38
+25    25 36.84349     38             38             38              35              38
+26    26 36.80255     38             38             38              35              38
+27    27 36.75917     38             38             38              35              38
+28    28 36.76127     38             38             38              35              38
+29    29 36.75423     38             38             38              35              38
+30    30 36.74986     38             38             38              35              38
+31    31 36.68983     38             38             38              34              38
+32    32 36.72604     38             38             38              34              38
+33    33 36.69203     38             38             38              34              38
+34    34 36.71205     38             38             38              34              38
+35    35 36.63199     38             38             38              34              38
+36    36 36.67976     38             38             38              34              38
+37    37 36.68898     38             38             38              34              38
+38    38 36.69094     38             38             38              34              38
+39    39 36.69848     38             38             38              34              38
+40    40 36.68209     38             38             38              34              38
+41    41 36.66626     38             38             38              34              38
+42    42 36.65819     38             38             38              34              38
+43    43 36.63786     38             38             38              34              38
+44    44 36.62830     38             38             38              34              38
+45    45 36.59488     38             38             38              34              38
+46    46 36.49093     38             38             38              34              38
+47    47 36.48281     38             38             38              34              38
+48    48 36.44696     38             38             38              34              38
+49    49 36.42707     38             38             38              34              38
+50    50 36.41363     38             38             38              34              38
+51    51 35.97946     38             37             38              31              38
+```
+
+### 5. 
+
+`sed` is within a shell command that is later called by `data.table::fread()`. [sed](https://www.geeksforgeeks.org/sed-command-in-linux-unix-with-examples/) is used with the `-n` parameter to print only lines where a replacement occurred. 
+
+### 6.
+
+I added the following line prior to the return statement.
+```{r 6a, eval=FALSE}
+dat$SampleName <- sample_name
+```
+
+Running again...
+```{r 6b, eval=FALSE}
+source("R/reading_in.R")
+reading_in("data/fastqc_data.txt", sample_name = "GSM5252661")
+```
+
+```
+   #Base     Mean Median Lower Quartile Upper Quartile 10th Percentile 90th Percentile SampleName
+1      1 32.61014     33             33             34              32              34 GSM5252661
+2      2 32.68292     34             33             34              32              34 GSM5252661
+3      3 32.74931     34             33             34              32              34 GSM5252661
+4      4 32.71110     34             33             34              32              34 GSM5252661
+5      5 32.75152     34             33             34              32              34 GSM5252661
+6      6 36.48617     38             37             38              34              38 GSM5252661
+7      7 36.67936     38             38             38              34              38 GSM5252661
+8      8 36.80839     38             38             38              35              38 GSM5252661
+9      9 36.88251     38             38             38              35              38 GSM5252661
+10    10 36.85532     38             38             38              35              38 GSM5252661
+11    11 36.80708     38             38             38              35              38 GSM5252661
+12    12 36.83219     38             38             38              35              38 GSM5252661
+13    13 36.86057     38             38             38              35              38 GSM5252661
+14    14 36.87245     38             38             38              35              38 GSM5252661
+15    15 36.83422     38             38             38              35              38 GSM5252661
+16    16 36.81788     38             38             38              35              38 GSM5252661
+17    17 36.84682     38             38             38              35              38 GSM5252661
+18    18 36.85354     38             38             38              35              38 GSM5252661
+19    19 36.85764     38             38             38              35              38 GSM5252661
+20    20 36.85268     38             38             38              35              38 GSM5252661
+21    21 36.84777     38             38             38              35              38 GSM5252661
+22    22 36.84937     38             38             38              35              38 GSM5252661
+23    23 36.83571     38             38             38              35              38 GSM5252661
+24    24 36.84454     38             38             38              35              38 GSM5252661
+25    25 36.84349     38             38             38              35              38 GSM5252661
+26    26 36.80255     38             38             38              35              38 GSM5252661
+27    27 36.75917     38             38             38              35              38 GSM5252661
+28    28 36.76127     38             38             38              35              38 GSM5252661
+29    29 36.75423     38             38             38              35              38 GSM5252661
+30    30 36.74986     38             38             38              35              38 GSM5252661
+31    31 36.68983     38             38             38              34              38 GSM5252661
+32    32 36.72604     38             38             38              34              38 GSM5252661
+33    33 36.69203     38             38             38              34              38 GSM5252661
+34    34 36.71205     38             38             38              34              38 GSM5252661
+35    35 36.63199     38             38             38              34              38 GSM5252661
+36    36 36.67976     38             38             38              34              38 GSM5252661
+37    37 36.68898     38             38             38              34              38 GSM5252661
+38    38 36.69094     38             38             38              34              38 GSM5252661
+39    39 36.69848     38             38             38              34              38 GSM5252661
+40    40 36.68209     38             38             38              34              38 GSM5252661
+41    41 36.66626     38             38             38              34              38 GSM5252661
+42    42 36.65819     38             38             38              34              38 GSM5252661
+43    43 36.63786     38             38             38              34              38 GSM5252661
+44    44 36.62830     38             38             38              34              38 GSM5252661
+45    45 36.59488     38             38             38              34              38 GSM5252661
+46    46 36.49093     38             38             38              34              38 GSM5252661
+47    47 36.48281     38             38             38              34              38 GSM5252661
+48    48 36.44696     38             38             38              34              38 GSM5252661
+49    49 36.42707     38             38             38              34              38 GSM5252661
+50    50 36.41363     38             38             38              34              38 GSM5252661
+51    51 35.97946     38             37             38              31              38 GSM5252661
+```
+
+### 7.
+
+In the scu, I read in four files corresponding to 2 techreps each of 2 biological replicates.
+
+- WT_2: ERR458878, ERR458879
+- WT_3: ERR458884, ERR458885
+
+Than I ran fastqc on all of the fastq.gz files
+
+```{bash 7a, eval=FALSE}
+cd /athena/angsd/scratch/yow4004/
+mkdir package_data
+mkdir package_data/fastqc_data_txt_files
+cd package_data
+
+for i in ERR458878 ERR458879 ERR458884 ERR458885; 
+do wget -O ${i}.fastq.gz "ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR458/${i}/${i}.fastq.gz"; 
+fastqc --extract -t 1 ${i}.fastq.gz; 
+cp ${i}_fastqc/fastqc_data.txt fastqc_data_txt_files/${i}_fastqc_data.txt;
+done
+```
+
+Like before, scp the fastqc_data.txt files over.. 
+
+```{bash 7b, eval=FALSE}
+scp yow4004@aphrodite.med.cornell.edu:/athena/angsd/scratch/yow4004/package_data/fastqc_data_txt_files/* Desktop/GitHub/packageyw/data
+```
+
+In R, loop through the sample IDs and apply the function.
+
+```{r 7c, eval=FALSE}
+names = c('ERR458878', 'ERR458879', 'ERR458884', 'ERR458885')
+out = list()
+
+for(n in names){
+  out[[n]] <- reading_in(sprintf("data/%s_fastqc_data.txt", n), sample_name = n)
+}
+
+out
+```
+
+```
+$ERR458878
+   #Base     Mean Median Lower Quartile Upper Quartile 10th Percentile 90th Percentile SampleName
+1      1 30.44931     31             30             31              27              34  ERR458878
+2      2 28.61415     31             28             31              16              34  ERR458878
+3      3 27.37409     31             25             31              16              34  ERR458878
+4      4 30.95351     35             28             37              19              37  ERR458878
+5      5 33.41106     35             32             37              28              37  ERR458878
+6      6 34.43691     35             35             37              31              37  ERR458878
+7      7 34.85089     35             35             37              32              37  ERR458878
+8      8 34.92064     35             35             37              32              37  ERR458878
+9      9 36.57263     38             35             39              32              39  ERR458878
+10    10 36.67334     39             35             39              32              39  ERR458878
+11    11 36.64277     39             35             39              32              39  ERR458878
+12    12 36.52663     38             35             39              32              39  ERR458878
+13    13 36.56330     38             35             39              32              39  ERR458878
+14    14 37.65134     39             36             41              32              41  ERR458878
+15    15 37.69727     39             36             41              32              41  ERR458878
+16    16 37.68228     39             36             41              32              41  ERR458878
+17    17 37.49341     39             36             41              32              41  ERR458878
+18    18 37.49404     39             36             41              32              41  ERR458878
+19    19 37.56277     39             36             41              32              41  ERR458878
+20    20 37.60038     39             36             41              32              41  ERR458878
+21    21 37.56203     39             36             40              32              41  ERR458878
+22    22 37.40387     39             36             40              32              41  ERR458878
+23    23 37.33361     39             36             40              32              41  ERR458878
+24    24 37.37626     39             36             40              32              41  ERR458878
+25    25 37.39683     39             36             40              32              41  ERR458878
+26    26 37.33693     39             36             40              32              41  ERR458878
+27    27 37.23734     39             36             40              31              41  ERR458878
+28    28 37.16043     39             36             40              31              41  ERR458878
+29    29 37.15747     39             36             40              31              41  ERR458878
+30    30 37.12280     39             36             40              31              41  ERR458878
+31    31 37.11326     39             36             40              31              41  ERR458878
+32    32 37.07315     39             36             40              31              41  ERR458878
+33    33 37.02225     39             36             40              30              41  ERR458878
+34    34 36.96016     39             36             40              30              41  ERR458878
+35    35 36.90044     39             36             40              30              41  ERR458878
+36    36 36.70472     39             35             40              30              41  ERR458878
+37    37 36.69155     39             35             40              30              41  ERR458878
+38    38 36.69086     38             35             40              30              41  ERR458878
+39    39 36.62320     38             35             40              30              41  ERR458878
+40    40 36.54794     38             35             40              30              41  ERR458878
+41    41 36.46814     38             35             40              30              41  ERR458878
+42    42 36.11666     38             35             40              30              41  ERR458878
+43    43 36.31645     38             35             40              30              41  ERR458878
+44    44 36.43446     38             35             40              30              41  ERR458878
+45    45 36.50625     39             35             40              30              41  ERR458878
+46    46 36.45532     39             35             40              30              41  ERR458878
+47    47 36.38443     39             35             40              30              41  ERR458878
+48    48 36.26568     39             35             40              30              41  ERR458878
+49    49 36.14751     39             35             40              30              41  ERR458878
+50    50 35.98698     39             35             40              30              41  ERR458878
+51    51 34.78572     38             34             40              27              41  ERR458878
+
+$ERR458879
+   #Base     Mean Median Lower Quartile Upper Quartile 10th Percentile 90th Percentile SampleName
+1      1 30.37158     31             30             31              27              34  ERR458879
+2      2 28.27497     31             27             31              16              34  ERR458879
+3      3 27.11813     31             25             31              16              34  ERR458879
+4      4 30.54154     35             28             37              19              37  ERR458879
+5      5 33.11390     35             32             37              28              37  ERR458879
+6      6 34.29746     35             33             37              30              37  ERR458879
+7      7 34.80035     35             35             37              32              37  ERR458879
+8      8 34.92080     35             35             37              32              37  ERR458879
+9      9 36.56010     38             35             39              32              39  ERR458879
+10    10 36.66843     39             35             39              32              39  ERR458879
+11    11 36.61783     39             35             39              32              39  ERR458879
+12    12 36.57722     38             35             39              32              39  ERR458879
+13    13 36.57244     38             35             39              32              39  ERR458879
+14    14 37.69861     39             36             41              32              41  ERR458879
+15    15 37.69746     39             36             41              32              41  ERR458879
+16    16 37.64783     39             36             41              32              41  ERR458879
+17    17 37.52575     39             36             41              32              41  ERR458879
+18    18 37.56792     39             36             41              32              41  ERR458879
+19    19 37.58755     39             36             41              32              41  ERR458879
+20    20 37.58365     39             36             41              32              41  ERR458879
+21    21 37.40503     39             36             40              32              41  ERR458879
+22    22 37.46232     39             36             40              32              41  ERR458879
+23    23 37.37255     39             36             40              32              41  ERR458879
+24    24 37.48441     39             36             41              32              41  ERR458879
+25    25 37.44447     39             36             41              32              41  ERR458879
+26    26 37.29953     39             36             40              31              41  ERR458879
+27    27 37.31098     39             36             40              31              41  ERR458879
+28    28 37.28988     39             36             40              31              41  ERR458879
+29    29 37.24641     39             36             40              31              41  ERR458879
+30    30 37.15795     39             36             40              31              41  ERR458879
+31    31 37.09292     39             36             40              31              41  ERR458879
+32    32 37.06760     39             36             40              31              41  ERR458879
+33    33 37.02195     39             36             40              30              41  ERR458879
+34    34 36.98595     39             36             40              30              41  ERR458879
+35    35 36.93610     39             36             40              30              41  ERR458879
+36    36 36.86073     39             36             40              30              41  ERR458879
+37    37 36.80434     39             35             40              30              41  ERR458879
+38    38 36.76795     39             35             40              30              41  ERR458879
+39    39 36.65639     39             35             40              30              41  ERR458879
+40    40 36.59665     38             35             40              30              41  ERR458879
+41    41 36.53007     38             35             40              30              41  ERR458879
+42    42 36.42894     38             35             40              30              41  ERR458879
+43    43 36.58927     39             35             40              30              41  ERR458879
+44    44 36.61120     39             35             40              30              41  ERR458879
+45    45 36.59256     39             35             40              30              41  ERR458879
+46    46 36.56124     39             35             40              30              41  ERR458879
+47    47 36.46099     39             35             40              30              41  ERR458879
+48    48 36.35608     39             35             40              30              41  ERR458879
+49    49 36.20655     39             35             40              30              41  ERR458879
+50    50 36.02070     39             35             40              30              41  ERR458879
+51    51 35.09302     38             34             40              27              41  ERR458879
+
+$ERR458884
+   #Base     Mean Median Lower Quartile Upper Quartile 10th Percentile 90th Percentile SampleName
+1      1 30.66000     31             30             33              28              34  ERR458884
+2      2 28.32286     31             27             33              16              34  ERR458884
+3      3 27.45057     31             25             31              16              34  ERR458884
+4      4 30.81225     35             28             37              19              37  ERR458884
+5      5 33.40999     35             32             37              28              37  ERR458884
+6      6 34.43378     35             35             37              31              37  ERR458884
+7      7 34.74758     35             35             37              32              37  ERR458884
+8      8 34.93214     35             35             37              32              37  ERR458884
+9      9 36.56517     38             35             39              32              39  ERR458884
+10    10 36.54018     39             35             39              32              39  ERR458884
+11    11 36.60933     39             35             39              32              39  ERR458884
+12    12 36.56120     38             35             39              32              39  ERR458884
+13    13 36.48715     38             35             39              32              39  ERR458884
+14    14 37.68587     39             36             41              32              41  ERR458884
+15    15 37.68160     39             36             41              32              41  ERR458884
+16    16 37.64895     39             36             41              32              41  ERR458884
+17    17 37.56689     39             36             41              32              41  ERR458884
+18    18 37.54056     39             36             41              32              41  ERR458884
+19    19 37.62092     39             36             41              32              41  ERR458884
+20    20 37.57836     39             36             41              32              41  ERR458884
+21    21 37.54035     39             36             40              32              41  ERR458884
+22    22 37.47963     39             36             40              32              41  ERR458884
+23    23 37.42746     39             36             40              32              41  ERR458884
+24    24 37.50200     39             36             41              32              41  ERR458884
+25    25 37.48579     39             36             41              32              41  ERR458884
+26    26 37.36177     39             36             40              32              41  ERR458884
+27    27 37.35507     39             36             40              32              41  ERR458884
+28    28 37.31873     39             36             40              31              41  ERR458884
+29    29 37.25430     39             36             40              31              41  ERR458884
+30    30 37.19365     39             36             40              31              41  ERR458884
+31    31 37.12001     39             36             40              31              41  ERR458884
+32    32 37.08952     39             36             40              31              41  ERR458884
+33    33 37.02103     39             36             40              30              41  ERR458884
+34    34 36.95074     39             36             40              30              41  ERR458884
+35    35 36.91513     39             36             40              30              41  ERR458884
+36    36 36.84852     39             36             40              30              41  ERR458884
+37    37 36.78378     39             35             40              30              41  ERR458884
+38    38 36.70745     39             35             40              30              41  ERR458884
+39    39 36.62340     39             35             40              30              41  ERR458884
+40    40 36.53042     38             35             40              30              41  ERR458884
+41    41 36.46295     38             35             40              30              41  ERR458884
+42    42 36.38073     38             35             40              30              41  ERR458884
+43    43 36.53479     39             35             40              30              41  ERR458884
+44    44 36.55795     39             35             40              30              41  ERR458884
+45    45 36.48652     39             35             40              30              41  ERR458884
+46    46 36.43177     39             35             40              30              41  ERR458884
+47    47 36.38354     39             35             40              30              41  ERR458884
+48    48 36.24412     39             35             40              30              41  ERR458884
+49    49 36.07376     39             35             40              30              41  ERR458884
+50    50 35.84836     38             35             40              29              41  ERR458884
+51    51 34.27123     37             33             40              26              40  ERR458884
+
+$ERR458885
+   #Base     Mean Median Lower Quartile Upper Quartile 10th Percentile 90th Percentile SampleName
+1      1 30.45550     31             30             33              27              34  ERR458885
+2      2 28.61171     31             28             31              16              34  ERR458885
+3      3 27.40187     31             25             31              16              34  ERR458885
+4      4 30.96062     35             28             37              19              37  ERR458885
+5      5 33.42010     35             32             37              28              37  ERR458885
+6      6 34.43108     35             35             37              31              37  ERR458885
+7      7 34.84346     35             35             37              32              37  ERR458885
+8      8 34.91798     35             35             37              32              37  ERR458885
+9      9 36.57337     38             35             39              32              39  ERR458885
+10    10 36.66438     39             35             39              32              39  ERR458885
+11    11 36.63389     39             35             39              32              39  ERR458885
+12    12 36.52138     38             35             39              32              39  ERR458885
+13    13 36.55605     38             35             39              32              39  ERR458885
+14    14 37.65386     39             36             41              32              41  ERR458885
+15    15 37.69134     39             36             41              32              41  ERR458885
+16    16 37.67519     39             36             41              32              41  ERR458885
+17    17 37.49243     39             36             41              32              41  ERR458885
+18    18 37.49378     39             36             41              32              41  ERR458885
+19    19 37.56202     39             36             41              32              41  ERR458885
+20    20 37.59396     39             36             41              32              41  ERR458885
+21    21 37.55424     39             36             41              32              41  ERR458885
+22    22 37.40277     39             36             40              32              41  ERR458885
+23    23 37.33024     39             36             40              32              41  ERR458885
+24    24 37.36982     39             36             41              32              41  ERR458885
+25    25 37.38585     39             36             41              32              41  ERR458885
+26    26 37.32478     39             36             40              32              41  ERR458885
+27    27 37.22777     39             36             40              31              41  ERR458885
+28    28 37.15061     39             36             40              31              41  ERR458885
+29    29 37.13957     39             36             40              31              41  ERR458885
+30    30 37.10440     39             36             40              31              41  ERR458885
+31    31 37.09083     39             36             40              31              41  ERR458885
+32    32 37.05561     39             36             40              31              41  ERR458885
+33    33 37.00866     39             36             40              30              41  ERR458885
+34    34 36.93970     39             36             40              30              41  ERR458885
+35    35 36.87428     39             36             40              30              41  ERR458885
+36    36 36.68768     39             35             40              30              41  ERR458885
+37    37 36.67050     39             35             40              30              41  ERR458885
+38    38 36.65894     38             35             40              30              41  ERR458885
+39    39 36.60114     38             35             40              30              41  ERR458885
+40    40 36.52427     38             35             40              30              41  ERR458885
+41    41 36.44324     38             35             40              30              41  ERR458885
+42    42 36.08799     38             35             40              29              41  ERR458885
+43    43 36.29020     38             35             40              30              41  ERR458885
+44    44 36.39645     38             35             40              30              41  ERR458885
+45    45 36.46874     39             35             40              30              41  ERR458885
+46    46 36.41271     39             35             40              30              41  ERR458885
+47    47 36.33235     39             35             40              30              41  ERR458885
+48    48 36.21636     39             35             40              30              41  ERR458885
+49    49 36.09599     39             35             40              30              41  ERR458885
+50    50 35.93575     39             35             40              30              41  ERR458885
+51    51 34.72998     38             33             40              27              41  ERR458885
+```
+
+### 8. 
+
+I initialized an empty dataframe and looped through the index of the the output list, appending each dataframe to the final dataframe. Then, I used the `save` function to save the object to the `data` directory. 
+
+```{r 8a, eval=FALSE}
+combined_df <- data.frame()
+
+for(i in 1:length(out)){
+  combined_df <- rbind(combined_df, out[[i]])
+}
+
+save(combined_df, file="data/combined_df.rda")
+```
+
+
+### 9.
+
+I kept the .rda file in the data directory [as recommended](https://thecoatlessprofessor.com/programming/r/creating-an-r-data-package/).
+
+Please see the `data.R` file within the `R` directory for documentation.
+
+### 10.
+
+Following [this guide](https://kbroman.org/pkg_primer/pages/build.html), I ran the following command in terminal (eval=FALSE because we only need to build once):
+
+```{bash 10a, eval=FALSE}
+cd Desktop/GitHub/
+R CMD build packageyw
+```
+
+```
+* checking for file ‘packageyw/DESCRIPTION’ ... OK
+* preparing ‘packageyw’:
+* checking DESCRIPTION meta-information ... OK
+* checking for LF line-endings in source and make files and shell scripts
+* checking for empty or unneeded directories
+* looking to see if a ‘data/datalist’ file should be added
+* re-saving tabular files
+  NB: this package now depends on R (>= 3.5.0)
+  WARNING: Added dependency on R >= 3.5.0 because serialized objects in
+  serialize/load version 3 cannot be read in older versions of R.
+  File(s) containing such objects:
+    ‘packageyw/data/combined_df.rda’
+* building ‘packageyw_0.0.0.9000.tar.gz’
+Warning in sprintf(gettext(fmt, domain = domain), ...) :
+  one argument not used by format 'invalid uid value replaced by that for user 'nobody''
+Warning: invalid uid value replaced by that for user 'nobody'
+Warning in sprintf(gettext(fmt, domain = domain), ...) :
+  one argument not used by format 'invalid gid value replaced by that for user 'nobody''
+Warning: invalid gid value replaced by that for user 'nobody'
+```
+
+```{r 10b, eval=FALSE}
+devtools::document()
+usethis::use_vignette("packageyw_vignette")
+```
+
+### 11.
+
+Install package and 
+
+```{r 11a, eval=FALSE}
+devtools::install("packageyw")
+library("packageyw")
+```

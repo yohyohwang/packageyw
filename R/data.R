@@ -1,0 +1,16 @@
+#' Output of reading_in function for 4 separate samples.
+#'
+#' A dataset containing the fastqc results of 4 samples from the Gierlinski dataset.
+#'
+#' @format A data frame with 204 rows and 8 variables:
+#' \describe{
+#'   \item{#Base}{row number of the individual result for each sample (1--51)}
+#'   \item{Mean}{mean qc value for this run (27.11813--37.69861)}
+#'   \item{Median}{median qc value for this run (31--39)}
+#'   \item{Lower Quartile}{highest qc value of lowest 25% of values (25--36)}
+#'   \item{Upper Quartile}{lowest qc value of highest 25% of values (31--41)}
+#'   \item{10th Percentile}{highest qc value of lowest 10% of values(16--32)}
+#'   \item{90th Percentile}{lowest qc value of highest 10% of values (34--41)}
+#'   \item{SampleName}{name of this sample (ERR458878, ERR458879, ERR458884, ERR458885)}
+#' }
+"combined_df"

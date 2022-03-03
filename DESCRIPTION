@@ -1,0 +1,14 @@
+Package: packageyw
+Title: Exercise 7: Creating an R Package
+Version: 0.0.0.9000
+Authors@R: 
+    person("Yohyoh", "Wang", , "yow4004@med.cornell.edu", role = c("aut", "cre"))
+Description: This package loads a .txt file of fastqc data into an R object.  
+License: `use_mit_license()`
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
